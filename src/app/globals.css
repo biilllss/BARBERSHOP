@@ -1,0 +1,470 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ */
+/*  Blade & Cedar — design tokens                                      */
+/*  Palette: charcoal #121212 · warm off-white #F2EDE4 · gold #C9A24B  */
+/* ------------------------------------------------------------------ */
+
+@theme inline {
+  /* Brand colors (used as text-charcoal, bg-cream, text-gold, …) */
+  --color-charcoal: #121212;
+  --color-charcoal-soft: #171614;
+  --color-charcoal-line: #232019;
+  --color-cream: #f2ede4;
+  --color-cream-muted: #a49d90;
+  --color-gold: #c9a24b;
+  --color-gold-deep: #a8853a;
+
+  /* Font stacks mapped from next/font CSS variables */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-arabic: var(--font-cairo), "Segoe UI", Tahoma, sans-serif;
+
+  /* shadcn/ui token bridge */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* The site is permanently dark — tokens live on :root */
+:root {
+  --radius: 0.25rem; /* sharp edges, barely-there rounding */
+  --background: #121212;
+  --foreground: #f2ede4;
+  --card: #171614;
+  --card-foreground: #f2ede4;
+  --popover: #171614;
+  --popover-foreground: #f2ede4;
+  --primary: #c9a24b;
+  --primary-foreground: #121212;
+  --secondary: #1e1c18;
+  --secondary-foreground: #f2ede4;
+  --muted: #1e1c18;
+  --muted-foreground: #a49d90;
+  --accent: #c9a24b;
+  --accent-foreground: #121212;
+  --destructive: #b3543f;
+  --border: rgba(242, 237, 228, 0.12);
+  --input: rgba(242, 237, 228, 0.18);
+  --ring: rgba(201, 162, 75, 0.65);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Offset for the sticky header when jumping to #sections */
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Editorial detail: avoid widows/orphans in long paragraphs */
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Arabic mode: swap body + display font to Cairo, loosen line height */
+  [dir="rtl"] body {
+    font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0 !important;
+    line-height: 1.85;
+  }
+  [dir="rtl"] .font-display {
+    font-family: var(--font-arabic), Georgia, serif;
+    letter-spacing: 0 !important;
+  }
+  /* Small-caps kickers are a Latin idea — soften them in Arabic */
+  [dir="rtl"] .kicker {
+    letter-spacing: 0.08em !important;
+  }
+
+  /* Visible, on-brand keyboard focus */
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-charcoal);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reusable brand details                                             */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  /* Oversized serif headline */
+  .headline {
+    @apply font-display text-cream;
+    text-wrap: balance;
+  }
+
+  /* Small-caps gold kicker above section titles */
+  .kicker {
+    @apply inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.32em] text-gold;
+  }
+
+  /* Hairline gold divider used between sections / under kickers */
+  .gold-rule {
+    height: 1px;
+    width: 3rem;
+    background: linear-gradient(to right, var(--color-gold), transparent);
+  }
+  [dir="rtl"] .gold-rule {
+    background: linear-gradient(to left, var(--color-gold), transparent);
+  }
+
+  /* Dotted leader between a menu item and its price */
+  .leader-dots {
+    flex: 1;
+    border-bottom: 1px dotted rgba(242, 237, 228, 0.22);
+    margin-inline: 0.75rem;
+    transform: translateY(-0.3em);
+  }
+
+  /* Dark-tinted live map (OSM iframe recolored to the charcoal palette) */
+  .map-dark {
+    filter: grayscale(1) invert(0.92) sepia(0.14) contrast(0.92) brightness(0.96);
+  }
+
+  /*
+   * Editorial drop cap — floats the first letter of a story paragraph in
+   * gold serif. Works in both directions (float: inline-start).
+   */
+  .drop-cap::first-letter {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 700;
+    font-size: 3.1em;
+    line-height: 0.85;
+    color: var(--color-gold);
+    float: inline-start;
+    margin-inline-end: 0.12em;
+    margin-block-start: 0.06em;
+  }
+
+  /*
+   * Giant outlined watermark word (behind the final CTA). Hollow letters
+   * via webkit text stroke; Firefox falls back to a very faint fill.
+   */
+  .text-stroke {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(242, 237, 228, 0.09);
+  }
+  @supports not (-webkit-text-stroke: 1px black) {
+    .text-stroke {
+      color: rgba(242, 237, 228, 0.04);
+    }
+  }
+
+  /*
+   * Gold underline sweep for footer/nav links — the line grows from the
+   * inline-start side on hover (mirrors correctly in RTL).
+   */
+  .link-sweep {
+    position: relative;
+  }
+  .link-sweep::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [dir="rtl"] .link-sweep::after {
+    transform-origin: right;
+  }
+  .link-sweep:hover::after,
+  .link-sweep:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /*
+   * Gold CTA sheen — a soft light band sweeps across gold buttons on
+   * hover/focus. Purely decorative; disabled for reduced motion below.
+   */
+  .sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 42%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 58%
+    );
+    transform: translateX(-130%) skewX(-12deg);
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .sheen:hover::after,
+  .sheen:focus-visible::after {
+    transform: translateX(130%) skewX(-12deg);
+  }
+
+  /*
+   * Soft gold halo under primary CTAs on hover — makes the booking
+   * buttons feel lit from within. Decorative only.
+   */
+  .glow-gold {
+    transition:
+      background-color 0.3s,
+      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .glow-gold:hover,
+  .glow-gold:focus-visible {
+    box-shadow:
+      0 10px 38px -10px rgba(201, 162, 75, 0.55),
+      0 2px 12px -2px rgba(201, 162, 75, 0.3);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Printable price list — "Print the price list" prints ONLY the      */
+/*  services section on a clean light sheet with a letterhead line.    */
+/*  Non-service chrome is marked with data-print="hide".               */
+/* ------------------------------------------------------------------ */
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  main > *:not(#services) {
+    display: none !important;
+  }
+
+  #services {
+    background: #fff !important;
+    border: 0 !important;
+    padding: 0 !important;
+  }
+
+  #services,
+  #services * {
+    color: #111 !important;
+    border-color: #d4d4d4 !important;
+  }
+
+  /* Letterhead line above the menu */
+  #services::before {
+    content: "Blade & Cedar — Barbershop · Bechara El Khoury St., Hamra, Beirut · +961 1 000 000";
+    display: block;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 13pt;
+    letter-spacing: 0.02em;
+    padding-bottom: 4mm;
+    margin-bottom: 6mm;
+    border-bottom: 1.5pt solid #111;
+  }
+
+  /* Dotted leaders must survive the color swap */
+  #services .leader-dots {
+    border-bottom-color: #999 !important;
+  }
+
+  /* Scroll-reveal content must not print half-invisible */
+  #services .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Two menu columns on paper, generous spacing */
+  #services ul {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 12mm !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Scroll reveal (driven by <FadeIn/> + IntersectionObserver)         */
+/* ------------------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero entrance — staggered once on load (delays via --rise-delay) */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-rise {
+  animation: hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Hero ken-burns — the backdrop breathes (very slow zoom drift).     */
+/*  Wrapped in no-preference so reduced-motion users get a still.      */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes ken-burns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.07);
+    }
+  }
+
+  .ken-burns {
+    animation: ken-burns 34s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Marquee ribbon (Hero → About ticker)                               */
+/*  Track holds two identical copies; translating -50% loops it.       */
+/* ------------------------------------------------------------------ */
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+.ribbon:hover .animate-marquee,
+.ribbon:focus-within .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Respect reduced-motion: content appears instantly, no movement */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .sheen::after {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Scrollbar + texture                                                */
+/* ------------------------------------------------------------------ */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #121212;
+}
+::-webkit-scrollbar-thumb {
+  background: #2e2a22;
+  border-radius: 8px;
+  border: 2px solid #121212;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c9a24b;
+}
+
+/* Faint film-grain so the charcoal never reads as flat black */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* cache-bust */
+
+/* cache-bust r6 */
+
+/* cache-bust r7 */
+
+/* cache-bust r9 */
+/* r11 recompile bust */
