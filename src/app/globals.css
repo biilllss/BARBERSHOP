@@ -298,9 +298,11 @@
     border-color: #d4d4d4 !important;
   }
 
-  /* Letterhead line above the menu */
+  /* Letterhead line above the menu — the contact string is injected by
+     layout.tsx as --print-contact so it always matches config.ts
+     (WHATSAPP_DISPLAY); the fallback covers a bare CSS-only render. */
   #services::before {
-    content: "Blade & Cedar — Barbershop · Bechara El Khoury St., Hamra, Beirut · +961 1 000 000";
+    content: var(--print-contact, "Blade & Cedar — Barbershop · Hamra, Beirut");
     display: block;
     font-family: Georgia, "Times New Roman", serif;
     font-size: 13pt;

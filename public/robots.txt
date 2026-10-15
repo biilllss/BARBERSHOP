@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://blade-and-cedar.example.com/sitemap.xml
+Sitemap: https://blade-and-cedar.vercel.app/sitemap.xml

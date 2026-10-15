@@ -3,19 +3,38 @@
 /*  Everything a real shop owner would need to edit lives here.       */
 /* ================================================================== */
 
+/**
+ * THE number — one constant drives every WhatsApp booking link AND the
+ * displayed phone number (header, hero, booking popup, gift card, barber
+ * cards, floating button, footer, "Prefer to call?"). International
+ * format WITHOUT "+" or spaces.
+ */
+export const WHATSAPP_NUMBER = "96179143702";
+
+/**
+ * "+961 79 143 702" — derived from WHATSAPP_NUMBER so the displayed
+ * phone can never drift out of sync with the wa.me links.
+ * Grouping: country code · prefix · 3 · 3.
+ */
+export const WHATSAPP_DISPLAY = `+${WHATSAPP_NUMBER.slice(0, 3)} ${WHATSAPP_NUMBER.slice(3, 5)} ${WHATSAPP_NUMBER.slice(5, 8)} ${WHATSAPP_NUMBER.slice(8)}`;
+
 export const SITE_CONFIG = {
   /** Brand */
   name: "Blade & Cedar",
   nameAr: "بليد آند سيدر",
 
-  /** Canonical site URL — used by metadata, JSON-LD, sitemap & robots. */
-  siteUrl: "https://blade-and-cedar.example.com",
-
   /**
-   * WhatsApp booking number, international format WITHOUT "+" or spaces.
-   * Replace the placeholder below with e.g. "96170123456".
+   * Canonical site URL (SITE_URL) — used by Open Graph, Twitter cards,
+   * JSON-LD, sitemap & robots. Update this one line when the
+   * deployment domain changes.
    */
-  whatsappNumber: "961XXXXXXXX",
+  siteUrl: "https://blade-and-cedar.vercel.app",
+
+  /** WhatsApp booking number — see WHATSAPP_NUMBER above. */
+  whatsappNumber: WHATSAPP_NUMBER,
+
+  /** Phone shown to humans — derived, always matches the WhatsApp line. */
+  phoneDisplay: WHATSAPP_DISPLAY,
 
   /** Pre-filled booking messages (URL-encoded automatically in waLink()). */
   whatsappMessageEn: "Hi Blade & Cedar, I'd like to book an appointment",
@@ -25,15 +44,6 @@ export const SITE_CONFIG = {
   addressEn: "Bechara El Khoury Street, Hamra — Beirut, Lebanon",
   addressAr: "شارع بشارة الخوري، الحمرا — بيروت، لبنان",
   mapUrl: "https://maps.google.com/?q=Hamra+Beirut", // placeholder map link
-  phoneDisplay: "+961 1 000 000", // landline shown in the Location section
-
-  /** Social links (fictional) */
-  instagram: "https://instagram.com/bladeandcedar",
-  facebook: "https://facebook.com/bladeandcedar",
-
-  /** Fictional Google reviews landing page (maps search). */
-  reviewsUrl:
-    "https://www.google.com/maps/search/?api=1&query=Blade+%26+Cedar+Barbershop+Hamra+Beirut",
 } as const;
 
 /**
@@ -63,7 +73,7 @@ export const IMAGES = {
   hero: img("photo-1521590832167-7bcbfaa6381f", 1920, 1280),
   /** About — barber at work */
   about: img("photo-1585747860715-2ba37e788b70", 1000, 1250),
-  /** Open Graph share image — branded artwork, self-hosted (public/og.jpg) */
+  /** Open Graph share image — hero photo + wordmark, self-hosted (public/og.jpg, 1200×630) */
   og: "/og.jpg",
   /** Before/after pair for the comparison slider (public/before-after/) */
   beforeAfter: {

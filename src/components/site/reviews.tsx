@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUpRight, BadgeCheck, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { FadeIn } from "./fade-in";
 import { SectionHeading } from "./section-heading";
-import { SITE_CONFIG } from "@/lib/config";
 import { useLanguage } from "@/lib/language-context";
 import { cn } from "@/lib/utils";
 
@@ -16,13 +15,11 @@ type Review = { quote: string; name: string; service: string };
  */
 function ReviewCard({
   review,
-  verified,
   dir,
   fixed = false,
   ariaHidden = false,
 }: {
   review: Review;
-  verified: string;
   dir: "ltr" | "rtl";
   fixed?: boolean;
   ariaHidden?: boolean;
@@ -77,29 +74,21 @@ function ReviewCard({
             {review.service}
           </span>
         </span>
-        {/* Verified visit chip */}
-        <span className="ms-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.12em] text-cream-muted">
-          <BadgeCheck className="size-4 shrink-0 text-gold" aria-hidden="true" />
-          <span className={cn(fixed ? "sr-only" : "hidden sm:inline")}>
-            {verified}
-          </span>
-        </span>
       </figcaption>
     </figure>
   );
 }
 
 /**
- * Reviews — an auto-scrolling marquee of six cards (pause on hover /
- * focus-within), with a static grid fallback for reduced-motion users.
- * Like the ribbon, the track is forced LTR so the -50% loop math is
- * identical in both languages; each card carries its own dir so Arabic
- * quotes stay right-aligned.
+ * Reviews — a neutral "What clients say" wall: an auto-scrolling marquee
+ * of six cards (pause on hover / focus-within), with a static grid
+ * fallback for reduced-motion users. No platform attribution, no counts —
+ * just the quotes. Like the ribbon, the track is forced LTR so the -50%
+ * loop math is identical in both languages; each card carries its own
+ * dir so Arabic quotes stay right-aligned.
  */
 export function Reviews() {
   const { t, isAr } = useLanguage();
-  const fill = (tpl: string, vars: Record<string, string>) =>
-    tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 
   /** Reduced-motion users get the static grid instead of the marquee. */
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -123,15 +112,18 @@ export function Reviews() {
     return (
       <section id="reviews" aria-labelledby="reviews-title" className="py-24 sm:py-32">
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
-          <Summary t={t} fill={fill} />
+          <FadeIn>
+            <SectionHeading
+              id="reviews-title"
+              index="05"
+              kicker={t.reviews.kicker}
+              title={t.reviews.title}
+              align="center"
+            />
+          </FadeIn>
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {items.map((review) => (
-              <ReviewCard
-                key={review.name}
-                review={review}
-                verified={t.reviews.verified}
-                dir={dir}
-              />
+              <ReviewCard key={review.name} review={review} dir={dir} />
             ))}
           </div>
         </div>
@@ -143,7 +135,15 @@ export function Reviews() {
   return (
     <section id="reviews" aria-labelledby="reviews-title" className="py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <Summary t={t} fill={fill} />
+        <FadeIn>
+          <SectionHeading
+            id="reviews-title"
+            index="05"
+            kicker={t.reviews.kicker}
+            title={t.reviews.title}
+            align="center"
+          />
+        </FadeIn>
       </div>
 
       {/* Full-bleed marquee — edge fades melt cards into the charcoal */}
@@ -154,23 +154,16 @@ export function Reviews() {
           aria-label={t.reviews.title}
         >
           <div
-            className="animate-marquee flex w-max gap-6 px-3 lg:gap-8"
+            className="animate-marquee flex w-max gap-6 px-3 motion-reduce:animate-none lg:gap-8"
             style={{ animationDuration: "64s" }}
           >
             {items.map((review) => (
-              <ReviewCard
-                key={review.name}
-                review={review}
-                verified={t.reviews.verified}
-                dir={dir}
-                fixed
-              />
+              <ReviewCard key={review.name} review={review} dir={dir} fixed />
             ))}
             {items.map((review) => (
               <ReviewCard
                 key={`dup-${review.name}`}
                 review={review}
-                verified={t.reviews.verified}
                 dir={dir}
                 fixed
                 ariaHidden
@@ -190,66 +183,5 @@ export function Reviews() {
         />
       </div>
     </section>
-  );
-}
-
-/* -------------------------------------------- shared summary strip */
-function Summary({
-  t,
-  fill,
-}: {
-  t: ReturnType<typeof useLanguage>["t"];
-  fill: (tpl: string, vars: Record<string, string>) => string;
-}) {
-  return (
-    <>
-      <FadeIn>
-        <SectionHeading
-          id="reviews-title"
-          index="05"
-          kicker={t.reviews.kicker}
-          title={t.reviews.title}
-          align="center"
-        />
-      </FadeIn>
-
-      {/* Rating summary strip */}
-      <FadeIn delay={100}>
-        <div className="mt-10 flex flex-col items-center gap-6">
-          <div className="flex items-center gap-4">
-            <span className="font-display text-5xl font-bold text-gold" aria-hidden="true">
-              4.9
-            </span>
-            <span className="flex flex-col gap-1.5">
-              <span className="flex gap-1 text-gold" role="img" aria-label="4.9 / 5">
-                {Array.from({ length: 5 }).map((_, s) => (
-                  <Star
-                    key={s}
-                    className={cn("size-4", s === 4 ? "fill-gold/40 text-gold/40" : "fill-gold")}
-                    aria-hidden="true"
-                  />
-                ))}
-              </span>
-              <span className="text-xs uppercase tracking-[0.18em] text-cream-muted">
-                {fill(t.reviews.summary, { n: "127" })}
-              </span>
-            </span>
-          </div>
-          {/* Read all on Google */}
-          <a
-            href={SITE_CONFIG.reviewsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 border-b border-gold/40 pb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold transition-colors duration-300 hover:border-gold hover:text-gold-deep"
-          >
-            {t.reviews.readAll}
-            <ArrowUpRight
-              className="size-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:translate-x-[-2px]"
-              aria-hidden="true"
-            />
-          </a>
-        </div>
-      </FadeIn>
-    </>
   );
 }

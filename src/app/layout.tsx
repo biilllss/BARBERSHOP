@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cairo, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { HOURS } from "@/lib/hours";
-import { SITE_CONFIG } from "@/lib/config";
+import { SITE_CONFIG, WHATSAPP_DISPLAY } from "@/lib/config";
 import { TRANSLATIONS } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
@@ -108,7 +108,7 @@ export default function RootLayout({
       "Premium barbershop in Hamra, Beirut. Precision haircuts, hot towel shaves and honest craft since 2016.",
     url: SITE_URL,
     image: [OG_IMAGE],
-    telephone: "+9611000000",
+    telephone: WHATSAPP_DISPLAY.replace(/\s/g, ""), // E.164 — same line as every WhatsApp CTA
     priceRange: "$",
     currenciesAccepted: "USD",
     paymentAccepted: "Cash, Credit Card",
@@ -142,6 +142,13 @@ export default function RootLayout({
        visitor switches to Arabic; defaults here are the English LTR base. */
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <body
+        style={
+          {
+            /* Print letterhead contact — derived from WHATSAPP_DISPLAY so
+               the printed price list shows the same line as the site. */
+            "--print-contact": `"Blade & Cedar — Barbershop · Bechara El Khoury St., Hamra, Beirut · ${WHATSAPP_DISPLAY}"`,
+          } as React.CSSProperties
+        }
         className={`${playfair.variable} ${inter.variable} ${cairo.variable} font-sans antialiased bg-background text-foreground`}
       >
         <script

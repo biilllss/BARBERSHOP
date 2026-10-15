@@ -113,11 +113,22 @@ function AnnouncementBar({ previewId }: { previewId: string | null }) {
       aria-hidden={barHidden}
       className={cn(
         "relative overflow-hidden bg-gold text-charcoal transition-all duration-500",
-        barHidden ? "max-h-0" : "max-h-12"
+        barHidden ? "max-h-0" : "max-h-24"
       )}
     >
-      <p className="mx-auto max-w-7xl px-12 py-2 text-center text-[11px] font-semibold leading-snug sm:px-14 sm:text-xs">
-        {message}
+      <p className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-12 py-2 text-center text-[11px] font-semibold leading-snug sm:px-14 sm:text-xs">
+        {/* Studio credit badge — stays visible on every announcement.
+            Arabic drops the latin-only uppercase/tracking treatment
+            (letter-spacing breaks the cursive script). */}
+        <span
+          className={cn(
+            "inline-flex shrink-0 items-center border border-charcoal/35 px-2 py-0.5 text-[9px] font-bold text-charcoal/75",
+            isAr ? "tracking-normal" : "uppercase tracking-[0.16em]"
+          )}
+        >
+          {t.announcement.concept}
+        </span>
+        <span>{message}</span>
       </p>
       <button
         type="button"

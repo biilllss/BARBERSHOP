@@ -144,7 +144,7 @@ export function Barbers() {
                   src={IMAGES.barbers[profileIdx]}
                   alt={t.barbers.alts[profileIdx]}
                   fill
-                  sizes="(min-width: 640px) 40vw, 100vw"
+                  sizes="(min-width: 640px) 270px, 100vw"
                   className="object-cover"
                 />
                 <span

@@ -48,6 +48,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     root.lang = lang;
     root.dir = lang === "ar" ? "rtl" : "ltr";
     window.localStorage.setItem(STORAGE_KEY, lang);
+
+    // og:locale follows the active language so a share sheet opened while
+    // browsing in Arabic crawls the page as ar_LB (crawlers read the live DOM).
+    const locale = lang === "ar" ? "ar_LB" : "en_US";
+    const alternate = lang === "ar" ? "en_US" : "ar_LB";
+    const ogLocale = document.querySelector('meta[property="og:locale"]');
+    const ogAlternate = document.querySelector(
+      'meta[property="og:locale:alternate"]'
+    );
+    if (ogLocale) ogLocale.setAttribute("content", locale);
+    if (ogAlternate) ogAlternate.setAttribute("content", alternate);
   }, [lang]);
 
   const setLang = useCallback((next: Lang) => setLangState(next), []);

@@ -214,11 +214,18 @@ function BookingDialogContent({
     if (!slot || !days[dayIdx]) return null;
     // Arabic: "يوم السبت" reads natural, but "يوم اليوم" doesn't —
     // so the weekday prefix is only added for real weekday labels.
+    // EN: real weekdays get a comma — "Saturday, Oct 17".
     const base = dayLabel(days[dayIdx]);
     const date = dayDateLabel(days[dayIdx]);
     const isRealWeekday =
       base !== t.booking.today && base !== t.booking.tomorrow;
-    const dayStr = isAr && isRealWeekday ? `يوم ${base} ${date}` : `${base} ${date}`;
+    const dayStr = isAr
+      ? isRealWeekday
+        ? `يوم ${base} ${date}`
+        : `${base} ${date}`
+      : isRealWeekday
+        ? `${base}, ${date}`
+        : `${base} ${date}`;
     const vars = { barber: barberName, day: dayStr, time: slot };
     return serviceName
       ? fill(
@@ -260,7 +267,7 @@ function BookingDialogContent({
   };
 
   const options: Array<{ idx: number | null; name: string; role: string; photo?: string }> = [
-    { idx: null, name: t.booking.anyBarber, role: "— · WhatsApp" },
+    { idx: null, name: t.booking.anyBarber, role: t.booking.anyBarberRole },
     ...t.barbers.names.map((name, i) => ({
       idx: i as number,
       name,
@@ -372,6 +379,7 @@ function BookingDialogContent({
                       alt=""
                       width={48}
                       height={48}
+                      sizes="48px"
                       className="size-12 shrink-0 rounded-full object-cover grayscale-[30%]"
                     />
                   ) : (
@@ -436,12 +444,14 @@ function BookingDialogContent({
                   className={cn(
                     "border px-3.5 py-2 text-sm transition-all duration-300 hover:-translate-y-0.5",
                     dayIdx === i
-                      ? "border-gold bg-gold/10 text-gold"
+                      ? "border-gold bg-gold font-semibold text-charcoal"
                       : "border-cream/15 text-cream-muted hover:border-gold/50 hover:text-cream"
                   )}
                 >
                   {dayLabel(d)}
-                  <span className="ms-1.5 text-xs opacity-70">{dayDateLabel(d)}</span>
+                  <span className={cn("ms-1.5 text-xs", dayIdx === i ? "text-charcoal/70" : "opacity-70")}>
+                    {dayDateLabel(d)}
+                  </span>
                 </button>
               ))}
             </div>
@@ -530,27 +540,36 @@ function BookingDialogContent({
           <span aria-hidden="true" />
         )}
 
-        {step === 2 && (
-          <a
-            href={waHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              rememberBarber(barberIdx === null ? "any" : barberIdx);
-              rememberService(serviceId);
-              onClose();
-            }}
-            aria-disabled={!slot}
-            className={cn(
-              "sheen glow-gold inline-flex items-center justify-center gap-2.5 bg-gold px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-charcoal transition-all duration-300 hover:bg-gold-deep",
-              !slot && "pointer-events-none opacity-40"
-            )}
-          >
-            <WhatsAppIcon className="size-4" />
-            {t.booking.confirm}
-            {slot && <span className="tabular-nums">· {slot}</span>}
-          </a>
-        )}
+        {step === 2 &&
+          /* The confirm CTA stays a dead button until a slot is picked —
+             no href, not clickable, announced as disabled. */
+          (slot ? (
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                rememberBarber(barberIdx === null ? "any" : barberIdx);
+                rememberService(serviceId);
+                onClose();
+              }}
+              className="sheen glow-gold inline-flex items-center justify-center gap-2.5 bg-gold px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-charcoal transition-all duration-300 hover:bg-gold-deep"
+            >
+              <WhatsAppIcon className="size-4" />
+              {t.booking.confirm}
+              <span className="tabular-nums">· {slot}</span>
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              className="inline-flex cursor-not-allowed items-center justify-center gap-2.5 bg-gold/40 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-charcoal/60"
+            >
+              <WhatsAppIcon className="size-4" />
+              {t.booking.confirm}
+            </button>
+          ))}
       </div>
     </DialogContent>
   );

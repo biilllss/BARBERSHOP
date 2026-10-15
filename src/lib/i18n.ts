@@ -24,6 +24,7 @@ const en = {
 
   announcement: {
     message: "Gift cards now available at the counter — the sharpest gift in town.",
+    concept: "Concept project by Mawqe3 Studio",
     dismiss: "Dismiss announcement",
   },
 
@@ -174,10 +175,7 @@ const en = {
 
   reviews: {
     kicker: "Reviews",
-    title: "Word around town",
-    summary: "Based on {n} Google reviews",
-    readAll: "Read all reviews on Google",
-    verified: "Verified visit",
+    title: "What clients say",
     items: [
       {
         quote: "Best skin fade in Beirut, and I've tried them all. Karim takes his time and it shows.",
@@ -229,7 +227,7 @@ const en = {
     directions: "Open in Google Maps",
     mapToggleAria: "Map style",
     mapToggleStylised: "Illustrated",
-    mapToggleLive: "Live map",
+    mapToggleLive: "Map preview",
   },
 
   gift: {
@@ -262,10 +260,8 @@ const en = {
   footer: {
     tagline: "Premium barbering in the heart of Beirut.",
     navAria: "Footer navigation",
-    instaCaption: "Fresh from the chair — follow along",
+    stripCaption: "Fresh from the chair",
     socialAria: {
-      instagram: "Blade & Cedar on Instagram",
-      facebook: "Blade & Cedar on Facebook",
       whatsapp: "Blade & Cedar on WhatsApp",
     },
     rights: "All rights reserved.",
@@ -284,6 +280,7 @@ const en = {
     chooseBarber: "Choose your barber",
     chooseTime: "Choose a day & time",
     anyBarber: "First available",
+    anyBarberRole: "Next free chair · WhatsApp",
     firstAvailableNote:
       "Pick “first available” and the next free chair is yours — the wait is usually under 10 minutes.",
     today: "Today",
@@ -293,8 +290,8 @@ const en = {
     closedNote: "We're closed right now — pick a slot for later.",
     tzHint: "Beirut time · 30-min slots",
     phoneFallback: "Prefer to call?",
-    waWith: "Hi Blade & Cedar, I'd like to book an appointment with {barber} on {day} at {time}.",
-    waAny: "Hi Blade & Cedar, I'd like to book an appointment with the first available barber on {day} at {time}.",
+    waWith: "Hi Blade & Cedar, I'd like to book with {barber} on {day} at {time}.",
+    waAny: "Hi Blade & Cedar, I'd like to book with the first available barber on {day} at {time}.",
     waServiceWith: "Hi Blade & Cedar, I'd like to book {service} with {barber} on {day} at {time}.",
     waServiceAny: "Hi Blade & Cedar, I'd like to book {service} with the first available barber on {day} at {time}.",
     serviceLabel: "Service",
@@ -342,6 +339,7 @@ const ar = {
 
   announcement: {
     message: "بطاقات الهدايا صارت متوفرة عند الكونتوار — أرقى هدية بالمدينة.",
+    concept: "مشروع مفاهيمي من Mawqe3 Studio",
     dismiss: "إخفاء الإعلان",
   },
 
@@ -492,10 +490,7 @@ const ar = {
 
   reviews: {
     kicker: "آراء الزبائن",
-    title: "كلام الحارة",
-    summary: "حسب {n} تقييم على جوجل",
-    readAll: "اقرا كل التقييمات على جوجل",
-    verified: "زيارة موثّقة",
+    title: "شو بيحكو زبائننا",
     items: [
       {
         quote: "أحسن فايد ببيروت، وجرّبت كل الصالونات. كريم بيخد وقتو والنتيجة بتبين.",
@@ -547,7 +542,7 @@ const ar = {
     directions: "افتح على خرائط جوجل",
     mapToggleAria: "نمط الخريطة",
     mapToggleStylised: "مرسومة",
-    mapToggleLive: "خريطة حيّة",
+    mapToggleLive: "معاينة الخريطة",
   },
 
   gift: {
@@ -580,10 +575,8 @@ const ar = {
   footer: {
     tagline: "حلاقة راقية في قلب بيروت.",
     navAria: "روابط أسفل الصفحة",
-    instaCaption: "طازة من على الكرسي — تابعنا",
+    stripCaption: "طازة من على الكرسي",
     socialAria: {
-      instagram: "بليد آند سيدر على إنستغرام",
-      facebook: "بليد آند سيدر على فيسبوك",
       whatsapp: "بليد آند سيدر على واتساب",
     },
     rights: "جميع الحقوق محفوظة.",
@@ -602,6 +595,7 @@ const ar = {
     chooseBarber: "اختار حلاقك",
     chooseTime: "اختار اليوم والوقت",
     anyBarber: "أول حلاق متفرغ",
+    anyBarberRole: "أول كرسي بيتفرّغ · واتساب",
     firstAvailableNote:
       "اختار «أول حلاق متفرغ» والكرسي الفاضي الجاي إلك — الانتظار عادةً أقل من ١٠ دقايق.",
     today: "اليوم",
